@@ -7,21 +7,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/public")
-public class PublicController {
+import java.util.List;
 
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/health-check")
-    public String healthCheck() {
-        return "OK";
+    @GetMapping("/all-users")
+    public ResponseEntity<?> getAllUsers(){
+        List<User> allUser = userService.getAllUser();
+        if(allUser != null && !allUser.isEmpty()){
+            return new ResponseEntity<>(allUser, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/create-user")
+    @PostMapping("/create-admin-user")
     public ResponseEntity<?> createUser(@RequestBody User user){
-        userService.saveNewUser(user);
+        userService.saveAdmin(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
