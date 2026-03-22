@@ -2,7 +2,10 @@ package com.edigest.journalApp.service;
 
 import com.edigest.journalApp.entity.User;
 import com.edigest.journalApp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -21,14 +25,25 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    //Or you can use @Slf4j annotation
+    // Creating only one logging instance for this class (private static final)
+    // private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+
     public void saveUser(User user){
         userRepository.save(user);
     }
 
-    public void saveNewUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList("USER"));
-        userRepository.save(user);
+    public boolean saveNewUser(User user){
+        try{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Arrays.asList("USER"));
+            userRepository.save(user);
+            return true;
+        }catch (Exception e){
+            log.error("hahahaha");
+            return false;
+        }
     }
 
     public void saveAdmin(User user) {

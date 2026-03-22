@@ -21,7 +21,6 @@ public class AdminController {
         if(allUser != null && !allUser.isEmpty()){
             return new ResponseEntity<>(allUser, HttpStatus.OK);
         }
-
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
